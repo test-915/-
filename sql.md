@@ -1,5 +1,15 @@
 # SQL
 
+> 语句类型：
+>
+> 库表构建
+>
+> 数据增删改
+>
+> 数据查询
+
+
+
 ## 库操作
 
 ### 创建库
@@ -100,7 +110,17 @@ select * from `表名`
 
 
 
-## 数据操作
+### 修改引擎
+
+```sql
+alter table 表名 engine=引擎
+```
+
+[引擎]:innodb、memory(内存引擎)等
+
+
+
+## 数操作
 
 ### 插入数据
 
@@ -112,6 +132,25 @@ insert into 表名(
 
 [字段]:可选，指定字段，不指定则顺序插入；
 [值]:可输入多个对象值；
+
+
+
+### 更新数据
+
+```sql
+update 表名 
+set 设置字段='设置值' 
+where 条件字段='条件值'
+```
+
+
+
+### 删除数据
+
+```sql
+delete from 表名
+where 条件字段=‘条件值’
+```
 
 
 
@@ -141,7 +180,7 @@ select concat(字段1)... from 表名
 
 ```sql
 int
-tinyint 	/*极短*/
+tinyint 	/* 极短 */
 smallint
 mediumint
 bigint
@@ -186,8 +225,8 @@ bit
 #### 短文本
 
 ```sql
-char		/*定长，删除尾部空格*/
-varchar		/*变长，保留尾部空格*/
+char		/* 定长，删除尾部空格 */
+varchar		/* 变长，保留尾部空格 */
 ```
 
 
@@ -226,8 +265,8 @@ varbinary
 #### 选择项
 
 ```sql
-enum		/*枚举*/	enum("参数1","参数2"...)
-set			/*集合*/	/*与enum同理*/
+enum		/* 枚举 */	enum("参数1","参数2"...)
+set			/* 集合 */	/* 与enum同理 */
 ```
 
 
@@ -238,7 +277,7 @@ set			/*集合*/	/*与enum同理*/
 date
 time
 datetime
-timestamp	/*时间戳*/
+timestamp	/* 时间戳 */
 year
 ```
 
@@ -260,25 +299,50 @@ now()
 
 
 
-### 主键
+### 键
+
+#### 主键
 
 ```sql
-primary key 	/*pk*/
+primary key 	/* pk */
 pk = unique + not null
 ```
 
 > 唯一标识；
 >
-> 不可空；
+> 非空；
 >
 > 一表一主键；
 
 
 
-### 外键
+##### 单主键
 
 ```sql
-foreign key		/*fk*/
+create table 表名(
+	字段 类型 primary key,
+    ...
+)
+```
+
+
+
+##### 复合主键
+
+```sql
+create table 表名(
+	字段 类型,
+	...
+	primary key(字段,字...)
+)
+```
+
+
+
+#### 外键
+
+```
+foreign key		/* fk */
 ```
 
 > 表与表之间的关联；
@@ -287,7 +351,56 @@ foreign key		/*fk*/
 
 
 
-### 非空
+```sql
+create table 表名(
+	字段 类型,
+	...
+	foreign key(字段)
+	references 外表名(外表字段) 
+	/* 
+    on update cascade
+    on delete cascade
+    */
+)
+/* engine = innodb */
+```
+
+[on update cascade]:可选，同步更新；
+[on delete cascade]: 可选，同步删除；
+[engine]: 默认为innodb;
+
+
+
+#### 唯一键
+
+```sql
+unique key		/* uk */
+```
+
+```sql
+/* 示例 */
+create table 表名(
+	字段1 类型1,
+	unique(字段1)
+)
+```
+
+```sql
+/* 自定义键名 */
+constraint 键名 unique(字段)
+```
+
+> 唯一；
+>
+> 可空；
+>
+> 一表多个唯一键；
+
+
+
+### 属性
+
+#### 非空
 
 ```sql
 not null
@@ -299,21 +412,7 @@ not null
 
 
 
-### 唯一键
-
-```sql
-unique key		/*uk*/
-```
-
-> 唯一；
->
-> 可空；
->
-> 一表多个唯一键；
-
-
-
-### 自增键
+#### 自增
 
 ```sql
 auto_increment
@@ -325,21 +424,21 @@ auto_increment
 
 
 
-### 默认值
+#### 默认值
 
 ```sql
 default
 ```
 
 ```sql
-/*示例1*/
+/* 示例 */
 字段1 enum("值1"...)not null default "值1"
-/*解释：字段1非空，且默认为值1*/
+/* 解释：字段1非空，且默认为值1 */
 ```
 
 
 
-### 无符号
+#### 无符号
 
 ```sql
 unsigned
@@ -347,7 +446,7 @@ unsigned
 
 
 
-### 零填充
+#### 零填充
 
 ```sql
 zerofill
